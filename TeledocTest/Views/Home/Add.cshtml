@@ -1,0 +1,89 @@
+﻿@using TeledocTest.Models
+
+@{
+    ViewBag.Title = "Добавление организации";
+    Firm firm = new Firm();
+    FirmsFounder firmsFounder = new FirmsFounder();
+    List<Founder> founders = new List<Founder>();
+    founders.Add(new Founder());
+}
+
+<h2>Создать организацию</h2>
+@{
+    if (ViewData.ContainsKey("result"))
+    {
+        @Html.ValidationMessageFor(f => f, ViewData["result"].ToString(), new { @class = "validation" })
+    }
+}
+
+    @using (Html.BeginForm("GetForm", "Home", FormMethod.Post))
+{
+        @Html.AntiForgeryToken()
+
+<div class="form-horizontal">
+    <hr />
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+    <div class="form-group">
+        @Html.LabelFor(fi => firm, "Название фирмы", htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.EditorFor(fi => firm.firm_name, new { htmlAttributes = new { @class = "form-control" } })
+        </div>
+        @Html.LabelFor(fi => firm.INN, "ИНН", htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.EditorFor(fi => firm.INN, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(fi => firm.INN, "Введите ИНН. 10 или 12 цифр.", new { @class = "text-danger" })
+        </div>
+    </div>
+    <h4>Учередитель</h4>
+    <div class="form-group">
+        @Html.LabelFor(fo => founders[0].SurName, "Фамилия", htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.EditorFor(fo => founders[0].SurName, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(fo => founders[0].SurName, "", new { @class = "text-danger" })
+        </div>
+
+        @Html.LabelFor(fo => founders[0].FirstName, "Имя", htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.EditorFor(fo => founders[0].FirstName, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(fo => founders[0].FirstName, "", new { @class = "text-danger" })
+        </div>
+
+        @Html.LabelFor(fo => founders[0].PatronymicName, "Отчество", htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.EditorFor(fo => founders[0].PatronymicName, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(fo => founders[0].PatronymicName, "", new { @class = "text-danger" })
+        </div>
+    </div>
+    <div id="insertPlaceId">
+
+    </div>
+    <div class="form-group">
+        <input type="button" value="Добавить учередителя" class="btn btn-default" onclick="addBlock()"/>
+    </div>
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-10">
+            <input type="submit" value="Создать" class="btn btn-default" />
+        </div>
+    </div>
+</div>
+}
+
+<div>
+    @Html.ActionLink("На главную", "Index")
+</div>
+
+<script>
+    var num = 1
+    function addBlock() {
+        var newdiv = document.createElement("div");
+        newdiv.innerHTML = "<div class=\"form - group\"> <label class=\"control-label col-md-2\" for= \"founder_" + num + "__SurName\" > Фамилия</label ><div class=\"col-md-10\"><input class=\"form-control text-box single-line\" id=\"founder_" + num + "__SurName\" name=\"founders[" + num + "].SurName\" type=\"text\" value=\"\" /><span class=\"field-validation-valid text-danger\" data-valmsg-for=\"founders[" + num + "].SurName\" data-valmsg-replace=\"true\"></span></div><label class=\"control-label col-md-2\" for=\"founder_" + num + "__FirstName\">Имя</label><div class=\"col-md-10\"><input class=\"form-control text-box single-line\" id=\"founder_" + num + "__FirstName\" name=\"founders[" + num + "].FirstName\" type=\"text\" value=\"\" /><span class=\"field-validation-valid text-danger\" data-valmsg-for=\"founders[" + num + "].FirstName\" data-valmsg-replace=\"true\"></span></div><label class=\"control-label col-md-2\" for=\"founder_" + num + "__PatronymicName\">Отчество</label><div class=\"col-md-10\"><input class=\"form-control text-box single-line\" id=\"founder_" + num + "__PatronymicName\" name=\"founders[" + num + "].PatronymicName\" type=\"text\" value=\"\" /><span class=\"field-validation-valid text-danger\" data-valmsg-for=\"founders[" + num + "].PatronymicName\" data-valmsg-replace=\"true\"></span></div> </div> <hr />";
+        document.getElementById("insertPlaceId").appendChild(newdiv);
+        num++;
+        return false;
+    }
+
+</script>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

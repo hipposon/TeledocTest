@@ -1,0 +1,197 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="TeledocTestDBModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Firms">
+          <Key>
+            <PropertyRef Name="firm_id" />
+          </Key>
+          <Property Name="firm_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="firm_name" Type="nvarchar" MaxLength="255" Nullable="false" />
+          <Property Name="INN" Type="nvarchar" MaxLength="12" Nullable="false" />
+        </EntityType>
+        <EntityType Name="FirmsFounders">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="FirmId" Type="int" Nullable="false" />
+          <Property Name="FounderId" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Founders">
+          <Key>
+            <PropertyRef Name="FounderId" />
+          </Key>
+          <Property Name="FounderId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="FirstName" Type="varchar" MaxLength="255" Nullable="false" />
+          <Property Name="SurName" Type="varchar" MaxLength="255" Nullable="false" />
+          <Property Name="PatronymicName" Type="varchar" MaxLength="255" Nullable="false" />
+        </EntityType>
+        <Association Name="FK_FirmsFounders_ToFirms">
+          <End Role="Firms" Type="Self.Firms" Multiplicity="1" />
+          <End Role="FirmsFounders" Type="Self.FirmsFounders" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Firms">
+              <PropertyRef Name="firm_id" />
+            </Principal>
+            <Dependent Role="FirmsFounders">
+              <PropertyRef Name="FirmId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_FirmsFounders_ToFounders">
+          <End Role="Founders" Type="Self.Founders" Multiplicity="1" />
+          <End Role="FirmsFounders" Type="Self.FirmsFounders" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Founders">
+              <PropertyRef Name="FounderId" />
+            </Principal>
+            <Dependent Role="FirmsFounders">
+              <PropertyRef Name="FounderId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="TeledocTestDBModelStoreContainer">
+          <EntitySet Name="Firms" EntityType="Self.Firms" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="FirmsFounders" EntityType="Self.FirmsFounders" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Founders" EntityType="Self.Founders" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_FirmsFounders_ToFirms" Association="Self.FK_FirmsFounders_ToFirms">
+            <End Role="Firms" EntitySet="Firms" />
+            <End Role="FirmsFounders" EntitySet="FirmsFounders" />
+          </AssociationSet>
+          <AssociationSet Name="FK_FirmsFounders_ToFounders" Association="Self.FK_FirmsFounders_ToFounders">
+            <End Role="Founders" EntitySet="Founders" />
+            <End Role="FirmsFounders" EntitySet="FirmsFounders" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="TeledocTestDBModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="Firm">
+          <Key>
+            <PropertyRef Name="firm_id" />
+          </Key>
+          <Property Name="firm_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="firm_name" Type="String" MaxLength="255" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="INN" Type="String" Nullable="false" Unicode="true" MaxLength="12" FixedLength="false" />
+          <NavigationProperty Name="FirmsFounders" Relationship="TeledocTestDBModel.FK_FirmsFounders_ToFirms" FromRole="Firm" ToRole="FirmsFounder" />
+        </EntityType>
+        <EntityType Name="Founder">
+          <Key>
+            <PropertyRef Name="FounderId" />
+          </Key>
+          <Property Name="FounderId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="FirstName" Type="String" MaxLength="255" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="SurName" Type="String" MaxLength="255" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="PatronymicName" Type="String" MaxLength="255" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="FirmsFounders" Relationship="TeledocTestDBModel.FK_FirmsFounders_ToFounders" FromRole="Founder" ToRole="FirmsFounder" />
+        </EntityType>
+        <EntityContainer Name="TeledocTestDBEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Firms" EntityType="Self.Firm" />
+          <EntitySet Name="Founders" EntityType="Self.Founder" />
+          <EntitySet Name="FirmsFounders" EntityType="TeledocTestDBModel.FirmsFounder" />
+          <AssociationSet Name="FK_FirmsFounders_ToFirms" Association="TeledocTestDBModel.FK_FirmsFounders_ToFirms">
+            <End Role="Firm" EntitySet="Firms" />
+            <End Role="FirmsFounder" EntitySet="FirmsFounders" />
+          </AssociationSet>
+          <AssociationSet Name="FK_FirmsFounders_ToFounders" Association="TeledocTestDBModel.FK_FirmsFounders_ToFounders">
+            <End Role="Founder" EntitySet="Founders" />
+            <End Role="FirmsFounder" EntitySet="FirmsFounders" />
+          </AssociationSet>
+        </EntityContainer>
+        <EntityType Name="FirmsFounder">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="FirmId" Type="Int32" Nullable="false" />
+          <Property Name="FounderId" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Firm" Relationship="TeledocTestDBModel.FK_FirmsFounders_ToFirms" FromRole="FirmsFounder" ToRole="Firm" />
+          <NavigationProperty Name="Founder" Relationship="TeledocTestDBModel.FK_FirmsFounders_ToFounders" FromRole="FirmsFounder" ToRole="Founder" />
+        </EntityType>
+        <Association Name="FK_FirmsFounders_ToFirms">
+          <End Type="TeledocTestDBModel.Firm" Role="Firm" Multiplicity="1" />
+          <End Type="TeledocTestDBModel.FirmsFounder" Role="FirmsFounder" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Firm">
+              <PropertyRef Name="firm_id" />
+            </Principal>
+            <Dependent Role="FirmsFounder">
+              <PropertyRef Name="FirmId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_FirmsFounders_ToFounders">
+          <End Type="TeledocTestDBModel.Founder" Role="Founder" Multiplicity="1" />
+          <End Type="TeledocTestDBModel.FirmsFounder" Role="FirmsFounder" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Founder">
+              <PropertyRef Name="FounderId" />
+            </Principal>
+            <Dependent Role="FirmsFounder">
+              <PropertyRef Name="FounderId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="TeledocTestDBModelStoreContainer" CdmEntityContainer="TeledocTestDBEntities">
+          <EntitySetMapping Name="Firms">
+            <EntityTypeMapping TypeName="TeledocTestDBModel.Firm">
+              <MappingFragment StoreEntitySet="Firms">
+                <ScalarProperty Name="firm_id" ColumnName="firm_id" />
+                <ScalarProperty Name="firm_name" ColumnName="firm_name" />
+                <ScalarProperty Name="INN" ColumnName="INN" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Founders">
+            <EntityTypeMapping TypeName="TeledocTestDBModel.Founder">
+              <MappingFragment StoreEntitySet="Founders">
+                <ScalarProperty Name="FounderId" ColumnName="FounderId" />
+                <ScalarProperty Name="FirstName" ColumnName="FirstName" />
+                <ScalarProperty Name="SurName" ColumnName="SurName" />
+                <ScalarProperty Name="PatronymicName" ColumnName="PatronymicName" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="FirmsFounders">
+            <EntityTypeMapping TypeName="TeledocTestDBModel.FirmsFounder">
+              <MappingFragment StoreEntitySet="FirmsFounders">
+                <ScalarProperty Name="FounderId" ColumnName="FounderId" />
+                <ScalarProperty Name="FirmId" ColumnName="FirmId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

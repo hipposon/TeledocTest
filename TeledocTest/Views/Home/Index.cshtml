@@ -1,0 +1,33 @@
+﻿@using TeledocTest.Models
+@{
+    ViewBag.Title = "Home Page";
+    List<Firm> Firms = ViewData["Firms"] as List<Firm>;
+    List<FirmsFounder> FirmsFounders = ViewData["FirmsFounders"] as List<FirmsFounder>;
+    List<Founder> Founders = ViewData["Founders"] as List<Founder>;
+}
+
+<div class="jumbotron">
+    <h1>Организации</h1>
+    <a href="~/Home/Add"><h2>Добавить</h2></a>
+</div>
+
+<div class="row">
+    @foreach (Firm firm in Firms)
+    {
+        <div class="col-md-4">
+            <h2>@firm.firm_name</h2>
+            <p>ИНН: @firm.INN</p>
+            <ul typeof="circle">
+                @{
+                    var existingLines = FirmsFounders.Where(ff => ff.FirmId == firm.firm_id).Select(ff => ff.FounderId).ToList();
+                    //var resultLines = Founders.Where(fo => fo.FounderId == existingLines. ) 
+                }
+                @foreach (Founder founder in Founders.Where(f => existingLines.Contains(f.FounderId)).ToList())
+                {
+                    <li>@string.Join(" ",  founder.SurName, founder.FirstName, founder.PatronymicName)</li>
+                }
+            </ul>
+        </div>
+        <hr/>
+    }    
+</div>
